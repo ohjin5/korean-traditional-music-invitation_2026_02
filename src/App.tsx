@@ -9,7 +9,7 @@
 // public/media/bgm.mp3
 
 import { motion, AnimatePresence } from 'motion/react';
-import { Calendar, MapPin, Music, ChevronRight, Flower, Phone, Info, Share2, VolumeX, Navigation, Bus, Train, Car } from 'lucide-react';
+import { Calendar, MapPin, Music, ChevronRight, Flower, Phone, Share2, VolumeX, Navigation, Bus, Train, Car } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 // Static Asset Paths
@@ -517,7 +517,6 @@ export default function App() {
           <div className="flex justify-center gap-12">
             <motion.a href="tel:041-557-0924" whileTap={{ scale: 0.9 }} className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg border border-gold-antique/5 text-gold-antique"><Phone size={22} /></motion.a>
             <motion.button onClick={handleShare} whileTap={{ scale: 0.9 }} className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg border border-gold-antique/5 text-gold-antique"><Share2 size={22} /></motion.button>
-            <motion.button whileTap={{ scale: 0.9 }} className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg border border-gold-antique/5 text-gold-antique"><Info size={22} /></motion.button>
           </div>
           
           <div className="space-y-12 px-2">
