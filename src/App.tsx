@@ -4,7 +4,7 @@
  */
 
 import { motion, AnimatePresence } from 'motion/react';
-import { Calendar, MapPin, Music, ChevronRight, Flower, Phone, Info, Share2, VolumeX, Navigation } from 'lucide-react';
+import { Calendar, MapPin, Music, ChevronRight, Flower, Phone, Info, Share2, VolumeX, Navigation, Bus, Train, Car } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 // BGM Path: /media/bgm.mp3 (Ensure this file exists in public/media/bgm.mp3)
@@ -307,7 +307,56 @@ export default function App() {
                 <Navigation size={18} fill="currentColor" />
                 카카오내비 안내
               </motion.a>
+
+              <div className="w-full pt-12 pb-4">
+                <h3 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.3em] flex items-center justify-center gap-3">
+                  <div className="w-4 h-[1px] bg-gold-antique/20" />
+                  Transportation
+                  <div className="w-4 h-[1px] bg-gold-antique/20" />
+                </h3>
+              </div>
               
+              <div className="w-full grid gap-4 pt-4">
+                <div className="bg-white/30 backdrop-blur-sm border border-gold-antique/10 p-6 rounded-2xl flex flex-col items-center gap-4 group transition-all hover:bg-white/40">
+                  <div className="w-10 h-10 rounded-full bg-apricot/10 flex items-center justify-center text-apricot group-hover:bg-apricot/20 transition-colors">
+                    <Bus size={18} />
+                  </div>
+                  <div className="text-center space-y-1.5">
+                    <h4 className="text-[14px] font-bold text-ink">버스 이용 시</h4>
+                    <p className="text-[13px] text-ink/70 leading-relaxed break-keep">
+                      천안버스터미널 하차 후<br />
+                      <span className="text-apricot font-bold">90번 버스</span> 이용
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white/30 backdrop-blur-sm border border-gold-antique/10 p-6 rounded-2xl flex flex-col items-center gap-4 group transition-all hover:bg-white/40">
+                  <div className="w-10 h-10 rounded-full bg-gold-antique/10 flex items-center justify-center text-gold-antique group-hover:bg-gold-antique/20 transition-colors">
+                    <Train size={18} />
+                  </div>
+                  <div className="text-center space-y-1.5">
+                    <h4 className="text-[14px] font-bold text-ink">지하철 이용 시</h4>
+                    <p className="text-[13px] text-ink/70 leading-relaxed break-keep">
+                      1호선 <span className="text-ink font-bold">천안역</span> 하차 후<br />
+                      천안역 서부광장 <span className="text-apricot font-bold">6번 버스</span> 이용
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white/30 backdrop-blur-sm border border-gold-antique/10 p-6 rounded-2xl flex flex-col items-center gap-4 group transition-all hover:bg-white/40">
+                  <div className="w-10 h-10 rounded-full bg-hanji-brown/10 flex items-center justify-center text-hanji-brown group-hover:bg-hanji-brown/20 transition-colors">
+                    <Car size={18} />
+                  </div>
+                  <div className="text-center space-y-1.5">
+                    <h4 className="text-[14px] font-bold text-ink">자가 이용 시</h4>
+                    <p className="text-[13px] text-ink/70 leading-relaxed break-keep">
+                      천안IC → 삼성대로 →<br />
+                      번영로 → 음봉로
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-8 bg-gold-soft/10 p-6 rounded-2xl border border-gold-antique/5">
                 <p className="text-[13px] text-ink/60 font-medium leading-[1.8] break-keep">
                   ※ 주차 공간이 협소하오니 가급적<br />
