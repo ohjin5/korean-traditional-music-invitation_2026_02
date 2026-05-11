@@ -22,16 +22,66 @@ const MAIN_LOGO_URL = '/img/logo.png';
 const PROGRAM = {
   part1: [
     { title: '거문고', songs: '홀로아리랑, 출강' },
-    { title: '해금', songs: '에델바이스, 학교가는길' },
+    { title: '해금', songs: '에델바이스, 학교 가는 길' },
     { title: '가야금', songs: '언제나 몇 번이라도, Summer' },
     { title: '타악', songs: '웃다리 사물놀이' },
   ],
   part2: [
-    { title: 'Fly to the Sky', songs: 'Full Orchestra' },
-    { title: '민요의 향연', songs: 'Full Orchestra' },
-    { title: 'Carol Medley', songs: 'Full Orchestra' },
+    { title: 'Fly to the Sky', info: '작곡 한태수' },
+    { title: '민요의 향연', info: '작곡 임교민' },
+    { title: 'Carol Medley', info: '편곡 강동완' },
   ]
 };
+
+const STAFF = [
+  { role: "예술감독 겸 지휘자", name: "박상진", highlight: true },
+  { role: "가야금", name: "공채린" },
+  { role: "거문고", name: "김채운" },
+  { role: "해금", name: "조소연" },
+  { role: "아쟁", name: "김명신" },
+  { role: "대금", name: "오혁" },
+  { role: "피리", name: "송송이" },
+  { role: "타악", name: "정예빈" },
+  { role: "사물놀이", name: "김서진" },
+  { role: "협연", name: "야금야금" },
+];
+
+const MEMBERS = [
+  {
+    instrument: "가야금",
+    names: "김나루 김야엘 박서윤 박서현 배지원 원혜인 이예안 이예지 이지수 이채민 임윤서 양서하 홍은솔"
+  },
+  {
+    instrument: "해금",
+    names: "김무찬 김예준 김하율 문서연 윤채린 이경하 이유신 이채윤 장재이 정유안 진나연 최하은 한가은 현채이 김하은"
+  },
+  {
+    instrument: "거문고",
+    names: "곽서율 고현 김다솜 김은서 박서윤 윤이나 이인준 이지원"
+  },
+  {
+    instrument: "타악",
+    names: "강수아 김다윗 김도운 김지율 문은서 박소율 박연우 배성윤 송은석 오하린 이상훈 이유정 정한비 황서희"
+  },
+  {
+    instrument: "피리",
+    names: "김예탁 김채율 김하진 윤수인 윤수현 장이현 최윤 한유은 고찬희"
+  },
+  {
+    instrument: "대금",
+    names: "강석연 김윤서 박준서 박지언 배서우 염동윤 이정훈 최원 홍장혁"
+  },
+  {
+    instrument: "아쟁",
+    names: "곽서효 김하윤 김현성"
+  },
+  {
+    instrument: "특별단원",
+    names: "정승안 정은아 김지율"
+  }
+];
+
+const RSVP_LINK = "https://naver.me/58q3vwX1";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 15 },
@@ -349,12 +399,73 @@ export default function App() {
 
         <div className="section-divider" />
 
-        {/* 4. Program Section */}
+        {/* 4. Staff Introduction */}
+        <motion.section {...fadeInUp} className="py-8 space-y-10">
+          <div className="text-center space-y-2">
+            <h2 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.4em]">Staff</h2>
+            <h3 className="text-2xl font-serif font-black text-navy">지휘자 및 강사진 소개</h3>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4">
+            {/* Conductor Highlight */}
+            {STAFF.filter(s => s.highlight).map((member, idx) => (
+              <div key={idx} className="bg-white/60 backdrop-blur-sm border border-gold-antique/20 rounded-[32px] p-8 text-center shadow-sm">
+                <span className="text-[11px] font-bold text-apricot uppercase tracking-wider mb-2 block">{member.role}</span>
+                <p className="text-2xl font-serif font-black text-navy">{member.name}</p>
+              </div>
+            ))}
+
+            {/* Other Staff Members */}
+            <div className="grid grid-cols-2 gap-3">
+              {STAFF.filter(s => !s.highlight).map((member, idx) => (
+                <div key={idx} className="bg-white/40 backdrop-blur-sm border border-gold-antique/10 rounded-2xl p-5 flex flex-col items-center justify-center gap-1">
+                  <span className="text-[10px] font-bold text-navy/40 uppercase tracking-tight">{member.role}</span>
+                  <p className="text-[15px] font-serif font-black text-navy">{member.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.section>
+
+        <div className="section-divider" />
+
+        {/* 5. Members Introduction */}
+        <motion.section {...fadeInUp} className="py-8 space-y-10">
+          <div className="text-center space-y-2">
+            <h2 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.4em]">Members</h2>
+            <h3 className="text-2xl font-serif font-black text-navy">단원 소개</h3>
+          </div>
+
+          <div className="grid gap-6">
+            {MEMBERS.map((group, idx) => (
+              <div key={idx} className="bg-white/40 backdrop-blur-sm border border-gold-antique/10 rounded-[28px] overflow-hidden group hover:bg-white/60 transition-colors">
+                <div className="px-6 py-4 bg-navy/5 border-b border-navy/5 flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-apricot" />
+                  <h4 className="text-[15px] font-serif font-black text-navy">{group.instrument}</h4>
+                </div>
+                <div className="p-6">
+                  <p className="text-[14px] text-navy/70 leading-[2.1] font-medium break-keep text-justify">
+                    {group.names}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+
+        <div className="section-divider" />
+
+        {/* 6. Program Section */}
         <motion.section {...fadeInUp} className="py-8 space-y-16">
+          <div className="text-center space-y-2">
+            <h2 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.4em]">Program</h2>
+            <h3 className="text-2xl font-serif font-black text-navy">프로그램</h3>
+          </div>
+
           <div className="space-y-8">
             <div className="flex items-center justify-between border-b border-gold-antique/10 pb-4">
               <h3 className="text-[11px] font-bold text-gold-antique uppercase tracking-widest flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-gold-antique" /> Part I. 실내악 국악
+                <div className="w-1.5 h-1.5 rounded-full bg-gold-antique" /> 1부
               </h3>
             </div>
             
@@ -363,7 +474,6 @@ export default function App() {
                 <div key={idx} className="program-card p-6 flex flex-col gap-2 group transition-colors hover:bg-white/60">
                   <div className="flex items-center justify-between">
                     <h4 className="text-[17px] font-serif font-black text-navy">{item.title}</h4>
-                    <span className="text-[9px] font-bold text-apricot tracking-widest uppercase opacity-60">Solo/Ensemble</span>
                   </div>
                   <div className="h-[1px] bg-gold-antique/5 w-full" />
                   <p className="text-[14px] text-navy/70 font-medium break-keep leading-relaxed italic">{item.songs}</p>
@@ -375,15 +485,18 @@ export default function App() {
           <div className="space-y-8">
             <div className="flex items-center justify-between border-b border-gold-antique/10 pb-4">
               <h3 className="text-[11px] font-bold text-navy/40 uppercase tracking-widest flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-navy/20" /> Part II. 국악 관현악
+                <div className="w-1.5 h-1.5 rounded-full bg-navy/20" /> 2부
               </h3>
             </div>
             
             <div className="grid gap-3">
               {PROGRAM.part2.map((item, idx) => (
-                <div key={idx} className="program-card p-6 flex items-center justify-between group hover:bg-white/60 transition-all">
-                  <h4 className="text-[17px] font-serif font-black text-navy">{item.title}</h4>
-                  <span className="text-[10px] font-bold text-navy/30 italic uppercase tracking-wider">Full Orchestra</span>
+                <div key={idx} className="program-card p-6 flex flex-col gap-2 group hover:bg-white/60 transition-all">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-[17px] font-serif font-black text-navy">{item.title}</h4>
+                  </div>
+                  <div className="h-[1px] bg-gold-antique/5 w-full" />
+                  <p className="text-[14px] text-navy/60 font-medium">{item.info}</p>
                 </div>
               ))}
             </div>
@@ -392,31 +505,7 @@ export default function App() {
 
         <div className="section-divider" />
 
-        {/* 5. Special Guest Section */}
-        <motion.section {...fadeInUp} className="py-8">
-          <div className="bg-white/40 backdrop-blur-xl p-10 rounded-[40px] border border-gold-antique/10 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 opacity-[0.02] transition-opacity duration-700">
-              <Music size={120} />
-            </div>
-            <div className="space-y-6 relative z-10">
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] font-bold text-apricot uppercase tracking-widest">Special Guest</span>
-                <div className="flex-1 h-[1px] bg-apricot/15" />
-              </div>
-              <div className="space-y-2">
-                <p className="text-[15px] font-bold text-apricot italic decoration-apricot/20 underline-offset-4">가야금 유튜버 <span className="text-navy font-serif font-black">야금야금</span></p>
-                <h3 className="text-3xl font-serif font-black text-navy tracking-tight">가야금 협연</h3>
-              </div>
-              <p className="text-[14px] text-navy/70 leading-relaxed break-keep font-medium">
-                전통 가야금의 선율에 현대적 감각을 더해 대중과 화발히 소통하는 아티스트 '야금야금'이 단원들과 함께 특별한 조화를 선보입니다.
-              </p>
-            </div>
-          </div>
-        </motion.section>
-
-        <div className="section-divider" />
-
-        {/* 6. Venue Section */}
+        {/* 7. Venue Section */}
         <motion.section {...fadeInUp} className="py-12 space-y-12">
           <div className="space-y-8 text-center flex flex-col items-center">
             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-gold-antique/10 mb-2">
@@ -546,9 +635,14 @@ export default function App() {
             <span className="text-[9px] font-bold text-gold-antique uppercase tracking-[0.2em] opacity-60">Admission Free</span>
             <span className="text-[16px] font-black text-ink tracking-tight">사전 관람권 신청</span>
           </div>
-          <button className="bg-apricot text-white font-black h-12 px-8 rounded-2xl shadow-xl shadow-apricot/20 active:scale-95 transition-all text-sm tracking-tight">
+          <a 
+            href={RSVP_LINK}
+            target="_blank"
+            rel="noreferrer"
+            className="bg-apricot text-white font-black h-12 px-8 rounded-2xl shadow-xl shadow-apricot/20 active:scale-95 transition-all text-sm tracking-tight flex items-center justify-center cursor-pointer"
+          >
             신청하기
-          </button>
+          </a>
         </motion.div>
       </div>
 
