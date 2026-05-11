@@ -62,15 +62,31 @@ export default function App() {
     audioRef.current.loop = true;
     audioRef.current.volume = 0.4;
 
-    const handleFirstInteraction = () => {
-      if (audioRef.current && !isPlaying) {
-        audioRef.current.play().then(() => {
+    const tryAutoPlay = async () => {
+      try {
+        if (audioRef.current) {
+          await audioRef.current.play();
           setIsPlaying(true);
-        }).catch(err => console.log("Autoplay blocked:", err));
+        }
+      } catch (error) {
+        console.log("Autoplay blocked. Waiting for user interaction.", error);
+        setIsPlaying(false);
       }
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('scroll', handleFirstInteraction);
+    };
+
+    tryAutoPlay();
+
+    const handleFirstInteraction = async () => {
+      if (!audioRef.current || isPlaying) return;
+      try {
+        await audioRef.current.play();
+        setIsPlaying(true);
+        window.removeEventListener('click', handleFirstInteraction);
+        window.removeEventListener('touchstart', handleFirstInteraction);
+        window.removeEventListener('scroll', handleFirstInteraction);
+      } catch (error) {
+        console.log("Playback failed:", error);
+      }
     };
 
     window.addEventListener('click', handleFirstInteraction);
@@ -143,7 +159,7 @@ export default function App() {
         <img 
           src={BGM_ICON_URL} 
           alt="배경음악" 
-          className={`w-[38px] h-[38px] object-contain pointer-events-none ${isPlaying ? 'animate-[spin_10s_linear_infinite]' : 'animate-none'}`}
+          className={`w-[38px] h-[38px] object-contain pointer-events-none ${isPlaying ? 'animate-[spin_8s_linear_infinite]' : 'animate-none'}`}
           onError={(e) => {
             e.currentTarget.style.display = 'none';
           }}
