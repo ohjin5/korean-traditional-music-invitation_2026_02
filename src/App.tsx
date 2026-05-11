@@ -100,7 +100,7 @@ export default function App() {
 
   const handleShare = () => {
     const shareData = {
-      title: '제2회 천안청소년국악관현악단 정기연주회',
+      title: '제2회 천안청소년국악관현악단 정기연주회 초대장',
       text: '깊어가는 계절, 우리 소리의 따뜻한 숨결을 담아 여러분을 초대합니다.',
       url: window.location.href,
     };
