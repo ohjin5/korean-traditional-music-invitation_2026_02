@@ -3,12 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+// Static files:
+// public/img/janggu.png
+// public/media/bgm.mp3
+
 import { motion, AnimatePresence } from 'motion/react';
 import { Calendar, MapPin, Music, ChevronRight, Flower, Phone, Info, Share2, VolumeX, Navigation, Bus, Train, Car } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
-// BGM Path: /media/bgm.mp3 (Ensure this file exists in public/media/bgm.mp3)
+// Static Asset Paths
 const BGM_URL = '/media/bgm.mp3';
+const JANGGU_IMAGE_URL = '/img/janggu.png';
 
 const PROGRAM = {
   part1: [
@@ -110,11 +115,26 @@ export default function App() {
 
       {/* 2. Hero Section */}
       <header className="relative z-10 w-full pt-32 pb-24 px-8 flex flex-col items-center text-center">
+        {/* Subtle Decorative Image (Janggu) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+          animate={{ opacity: 0.1, scale: 1, rotate: 0 }}
+          transition={{ duration: 2, ease: "easeOut" }}
+          className="absolute top-48 left-[-10%] w-48 h-48 pointer-events-none z-0"
+        >
+          <img 
+            src={JANGGU_IMAGE_URL} 
+            alt="" 
+            className="w-full h-full object-contain filter grayscale sepia brightness-110"
+            onError={(e) => (e.currentTarget.style.display = 'none')}
+          />
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
-          className="mb-10 opacity-60"
+          className="mb-10 opacity-60 relative z-10"
         >
           <Flower className="text-gold-antique w-8 h-8" />
         </motion.div>
