@@ -448,28 +448,41 @@ export default function App() {
           </div>
 
           <div className="grid gap-6">
-            {MEMBERS.map((group, idx) => (
-              <div key={idx} className="rounded-3xl bg-white/70 border border-[#E8A46B]/20 shadow-sm overflow-hidden group hover:bg-white/80 transition-all p-6">
-                <div className="flex items-center justify-between gap-4">
-                  <h4 className="text-lg font-serif font-black text-[#14265A]">{group.instrument}</h4>
-                  <div className="w-14 h-14 rounded-full bg-[#FFF4E6] border border-[#E8A46B]/30 flex items-center justify-center shrink-0 shadow-sm">
-                    <img 
-                      src={MEMBER_ICON_MAP[group.instrument]} 
-                      alt={`${group.instrument} 아이콘`}
-                      className="w-10 h-10 object-contain"
-                      onError={(e) => {
-                        e.currentTarget.style.opacity = '0';
-                      }}
-                    />
+            {MEMBERS.map((group, idx) => {
+              const memberCount = group.names.trim().split(/\s+/).length;
+              const formattedNames = group.names.trim().split(/\s+/).join(' · ');
+              
+              return (
+                <div key={idx} className="rounded-[28px] bg-[#FFF9F0]/85 border border-[#E8A46B]/20 shadow-[0_8px_24px_rgba(70,45,20,0.06)] p-7 group hover:bg-[#FFF9F0] transition-all">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="space-y-1">
+                      <h4 className="text-xl font-extrabold text-[#14265A] font-serif">{group.instrument}</h4>
+                      <p className="text-[11px] font-bold text-[#C58A52] tracking-wider">
+                        {group.instrument === "특별단원" ? `특별단원 ${memberCount}명` : `단원 ${memberCount}명`}
+                      </p>
+                    </div>
+                    <div className="w-16 h-16 rounded-full bg-[#FFF1DF] border border-[#E8A46B]/30 flex items-center justify-center shrink-0 shadow-inner">
+                      <img 
+                        src={MEMBER_ICON_MAP[group.instrument]} 
+                        alt={`${group.instrument} 아이콘`}
+                        className="w-12 h-12 object-contain drop-shadow-sm"
+                        onError={(e) => {
+                          e.currentTarget.style.opacity = '0';
+                        }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="my-5 h-px bg-[#E8A46B]/20 w-full" />
+                  
+                  <div className="space-y-1">
+                    <p className="text-[14.5px] leading-[2.1] text-[#4A3A30] font-medium break-keep text-justify">
+                      {formattedNames}
+                    </p>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t border-[#E8A46B]/15">
-                  <p className="text-sm leading-relaxed break-keep text-[#4A3A30] font-medium text-justify">
-                    {group.names}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </motion.section>
 
