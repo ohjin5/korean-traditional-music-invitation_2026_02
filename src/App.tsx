@@ -39,7 +39,7 @@ const STAFF = [
   { role: "피리", name: "송송이" },
   { role: "타악", name: "정예빈" },
   { role: "사물놀이", name: "김서진" },
-  { role: "작곡가", name: "김동완" },
+  { role: "작곡가", name: "강동완" },
   { role: "국악 병창", name: "박문정" },
 ];
 
@@ -78,7 +78,7 @@ const MEMBERS = [
     names: "곽서효 김하윤 김현성"
   },
   {
-    instrument: "특별단원",
+    instrument: "피아노",
     names: "김지율"
   }
 ];
@@ -91,7 +91,7 @@ const MEMBER_ICON_MAP: Record<string, string> = {
   피리: "/img/피리.png",
   대금: "/img/대금.png",
   아쟁: "/img/아쟁.png",
-  특별단원: "/img/특별.png",
+  피아노: "/img/피아노.png",
 };
 
 const GALLERY_IMAGES = Array.from(
@@ -744,8 +744,8 @@ export default function App() {
                   <div className="text-center space-y-1.5">
                     <h4 className="text-[14px] font-bold text-ink">지하철 이용 시</h4>
                     <p className="text-[13px] text-ink/70 leading-relaxed break-keep">
-                      1호선 <span className="text-ink font-bold">천안역</span> 하차 후<br />
-                      천안역 서부광장 <span className="text-apricot font-bold">6번 버스</span> 이용
+                      1호선 <span className="text-ink font-bold">아산역</span> 하차 후<br />
+                      <span className="text-apricot font-bold">90번, 21번 버스</span> 이용
                     </p>
                   </div>
                 </div>
