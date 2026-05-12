@@ -81,6 +81,17 @@ const MEMBERS = [
   }
 ];
 
+const MEMBER_ICON_MAP: Record<string, string> = {
+  가야금: "/img/가야금.png",
+  해금: "/img/해금.png",
+  거문고: "/img/거문고.png",
+  타악: "/img/타악.png",
+  피리: "/img/피리.png",
+  대금: "/img/대금.png",
+  아쟁: "/img/아쟁.png",
+  특별단원: "/img/특별.png",
+};
+
 const RSVP_LINK = "https://naver.me/58q3vwX1";
 
 const fadeInUp = {
@@ -438,13 +449,22 @@ export default function App() {
 
           <div className="grid gap-6">
             {MEMBERS.map((group, idx) => (
-              <div key={idx} className="bg-white/40 backdrop-blur-sm border border-gold-antique/10 rounded-[28px] overflow-hidden group hover:bg-white/60 transition-colors">
-                <div className="px-6 py-4 bg-navy/5 border-b border-navy/5 flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-apricot" />
-                  <h4 className="text-[15px] font-serif font-black text-navy">{group.instrument}</h4>
+              <div key={idx} className="rounded-3xl bg-white/70 border border-[#E8A46B]/20 shadow-sm overflow-hidden group hover:bg-white/80 transition-all p-6">
+                <div className="flex items-center justify-between gap-4">
+                  <h4 className="text-lg font-serif font-black text-[#14265A]">{group.instrument}</h4>
+                  <div className="w-14 h-14 rounded-full bg-[#FFF4E6] border border-[#E8A46B]/30 flex items-center justify-center shrink-0 shadow-sm">
+                    <img 
+                      src={MEMBER_ICON_MAP[group.instrument]} 
+                      alt={`${group.instrument} 아이콘`}
+                      className="w-10 h-10 object-contain"
+                      onError={(e) => {
+                        e.currentTarget.style.opacity = '0';
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-[14px] text-navy/70 leading-[2.1] font-medium break-keep text-justify">
+                <div className="mt-4 pt-4 border-t border-[#E8A46B]/15">
+                  <p className="text-sm leading-relaxed break-keep text-[#4A3A30] font-medium text-justify">
                     {group.names}
                   </p>
                 </div>
