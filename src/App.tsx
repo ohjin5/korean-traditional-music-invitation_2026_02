@@ -111,6 +111,8 @@ export default function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [displayImages, setDisplayImages] = useState<string[]>(IMAGES_INIT);
   const poolRef = useRef<string[]>(IMAGES_POOL_INIT);
+  const failedImagesRef = useRef<Set<string>>(new Set());
+  const [failedImagesState, setFailedImagesState] = useState<Set<string>>(new Set());
   const [fadingIndex, setFadingIndex] = useState<number | null>(null);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const [showShareToast, setShowShareToast] = useState(false);
@@ -120,6 +122,10 @@ export default function App() {
     GALLERY_IMAGES.forEach((src) => {
       const img = new Image();
       img.src = src;
+      img.onerror = () => {
+        failedImagesRef.current.add(src);
+        setFailedImagesState(prev => new Set(prev).add(src));
+      };
     });
   }, []);
 
@@ -135,15 +141,16 @@ export default function App() {
           const newImages = [...prev];
           const oldImage = newImages[slotIndex];
 
-          // Duplication Check: Filter candidates that are not currently visible in other slots
+          // Duplication & Failure Check
           const visibleExceptCurrent = newImages.filter((_, idx) => idx !== slotIndex);
           const availablePool = poolRef.current.filter(
-            (candidate) => !visibleExceptCurrent.includes(candidate)
+            (candidate) => 
+              !visibleExceptCurrent.includes(candidate) && 
+              !failedImagesRef.current.has(candidate)
           );
 
           if (availablePool.length === 0) return newImages;
 
-          // Pick a random image from the filtered pool
           const selectedPoolIndex = Math.floor(Math.random() * availablePool.length);
           const newImage = availablePool[selectedPoolIndex];
           
@@ -192,7 +199,7 @@ export default function App() {
           setIsPlaying(true);
         }
       } catch (error) {
-        console.log("Autoplay blocked. Waiting for user interaction.", error);
+        // Autoplay blocked is expected in many browsers. Silence to avoid clutter.
         setIsPlaying(false);
       }
     };
@@ -569,8 +576,17 @@ export default function App() {
               {displayImages.map((src, index) => (
                 <div 
                   key={`${src}-${index}`} 
-                  className="aspect-[4/3] overflow-hidden rounded-2xl bg-[#FFF7EA] border border-[#E8A46B]/15 shadow-[0_6px_18px_rgba(70,45,20,0.08)]"
+                  className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-[#FFF7EA] border border-[#E8A46B]/15 shadow-[0_6px_18px_rgba(70,45,20,0.08)]"
                 >
+                  {failedImagesState.has(src) && (
+                    <div className="absolute inset-0 flex items-center justify-center p-3 text-center">
+                      <span className="text-[9px] text-[#C58A52]/40 break-all leading-tight font-medium">
+                        이미지를 불러올 수 없습니다
+                        <br />
+                        {src}
+                      </span>
+                    </div>
+                  )}
                   <img 
                     src={src} 
                     alt={`갤러리 이미지 ${index + 1}`}
@@ -578,10 +594,12 @@ export default function App() {
                     className={`
                       w-full h-full object-cover
                       transition-opacity duration-700 ease-in-out
-                      ${fadingIndex === index ? "opacity-0" : "opacity-100"}
+                      ${fadingIndex === index || failedImagesState.has(src) ? "opacity-0" : "opacity-100"}
                     `}
                     onError={() => {
                       console.warn("Gallery image failed to load:", src);
+                      failedImagesRef.current.add(src);
+                      setFailedImagesState(prev => new Set(prev).add(src));
                     }}
                   />
                 </div>
