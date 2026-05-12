@@ -418,29 +418,16 @@ export default function App() {
             <span className="text-lg md:text-xl font-sans tracking-[0.6em] md:tracking-[0.8em] text-[#FFF8EF] mt-3 md:mt-4 font-bold drop-shadow-lg">청 : 온</span>
           </motion.div>
  
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 1 }}
-            className="mb-10 md:mb-16 relative flex items-center justify-center text-[#FFF7EA] font-serif w-full max-w-[320px] md:max-w-none"
-          >
-            <div className="relative z-10 flex flex-col items-center justify-center text-[16px] md:text-[18px] leading-[1.8] md:leading-[1.9] break-keep font-bold px-4 md:px-10 py-5 md:py-6 -translate-y-0.5 whitespace-nowrap md:whitespace-normal" style={{ textShadow: '0 2px 12px rgba(10,20,60,0.6)' }}>
-              <p className="m-0">깊어가는 계절,</p>
-              <p className="m-0">우리 소리의 따뜻한 숨결을 담아</p>
-              <p className="m-0">여러분을 초대합니다.</p>
-            </div>
-          </motion.div>
- 
           {/* Unified Info Card (Date, Location, Logo) */}
-          <div className="relative w-full flex justify-center mt-8 md:mt-12 group">
+          <div className="relative w-full flex justify-center mt-32 md:mt-60 group">
             {/* Ambient Radial Glow centered behind the card info area */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[150%] bg-[radial-gradient(circle_at_center,rgba(253,249,243,0.95)_0%,rgba(250,154,84,0.15)_60%,transparent_100%)] blur-2xl opacity-60 pointer-events-none z-0" />
             
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 1 }}
-              className="relative z-10 w-[82%] max-w-[330px] rounded-[28px] bg-[#FFF9F0]/95 border border-[#E8A46B]/20 shadow-[0_12px_32px_rgba(70,45,20,0.12)] px-6 py-7 flex flex-col items-center text-center"
+              transition={{ delay: 1, duration: 1 }}
+              className="relative z-10 w-[82%] max-w-[330px] rounded-[28px] bg-[#FFF9F0]/95 border border-[#E8A46B]/20 shadow-[0_12px_32px_rgba(70,45,20,0.12)] px-6 py-6 flex flex-col items-center text-center"
             >
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 md:gap-3 text-navy font-black text-[15px] md:text-[17px]">
