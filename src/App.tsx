@@ -5,7 +5,7 @@
 
 // Static files:
 // public/img/janggu.png
-// public/img/background.png
+// public/img/background2.png
 // public/media/bgm.mp3
 
 import { motion, AnimatePresence } from 'motion/react';
@@ -15,7 +15,7 @@ import { useState, useEffect, useRef } from 'react';
 // Static Asset Paths
 const BGM_URL = '/media/bgm.mp3';
 const JANGGU_IMAGE_URL = '/img/janggu.png';
-const HERO_BACKGROUND_URL = '/img/background.png';
+const HERO_BACKGROUND_URL = '/img/background2.png';
 const BGM_ICON_URL = '/img/bgmicon.png';
 const MAIN_LOGO_URL = '/img/logo.png';
 
@@ -307,10 +307,10 @@ export default function App() {
       </button>
 
       {/* 2. Hero Section (Poster Style) */}
-      <header className="relative z-10 w-full min-h-[92vh] sm:min-h-screen flex flex-col items-center justify-start pt-14 md:pt-20 pb-12 md:pb-16 overflow-hidden bg-[#FA9A54] transition-all">
+      <header className="relative z-10 w-full min-h-[92vh] sm:min-h-screen flex flex-col items-center justify-start pt-14 md:pt-20 pb-12 md:pb-16 overflow-hidden bg-[#FDF9F3] transition-all">
         
-        {/* Base Poster Background Layer */}
-        <div className="absolute inset-0 z-0 bg-[#FA9A54] overflow-hidden">
+        {/* Base Poster Background Layer: Transitions from poster-orange to paper-ivory */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#FA9A54] via-[#FA9A54] to-[#FDF9F3] overflow-hidden">
           {/* Subtle noise or texture for paper feel */}
           <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
           
@@ -319,13 +319,16 @@ export default function App() {
             initial={{ opacity: 0, scale: 1.1 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.8, ease: "easeOut" }}
-            className="absolute inset-0 z-[1] flex items-center justify-center pt-[5%]"
+            className="absolute inset-0 z-[1] flex items-center justify-center pt-0"
           >
             <div className="absolute inset-0 bg-black/5 z-[2] pointer-events-none" />
             <img 
               src={HERO_BACKGROUND_URL} 
-              alt="" 
-              className="w-full h-full object-contain sm:object-cover scale-[1.05] sm:scale-100 object-[center_18%] md:object-top opacity-85"
+              alt="천안청소년국악관현악단 정기연주회" 
+              className="w-full h-full object-cover scale-[1.08] sm:scale-100 object-[center_-5%] sm:object-[center_5%] md:object-top opacity-90 transition-all duration-1000"
+              onError={() => {
+                console.warn("Hero background failed to load:", HERO_BACKGROUND_URL);
+              }}
             />
           </motion.div>
 
@@ -337,9 +340,31 @@ export default function App() {
             <Flower size={180} className="text-white/40" strokeWidth={0.5} />
           </div>
 
-          {/* Specialized Overlays for Poster Vibe */}
+          {/* Specialized Overlays for Poster Vibe & Legibility */}
           <div className="absolute inset-x-0 top-0 h-40 z-[5] bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-48 z-[7] bg-gradient-to-t from-[#FDF9F3] via-[#FDF9F3]/60 to-transparent pointer-events-none" />
+          
+          {/* Enhanced Bottom Blending: Multi-step gradient for smoother transition to the main background */}
+          <div className="absolute inset-x-0 bottom-0 h-[65%] z-[6] bg-gradient-to-t from-[#FDF9F3] via-[#FDF9F3]/90 via-[#FA9A54]/60 to-transparent pointer-events-none" />
+          
+          {/* Soft Radial Glow: Specifically placed to illuminate the area behind the info card */}
+          <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 w-[150%] h-[50%] z-[6] bg-[radial-gradient(circle_at_center,rgba(250,154,84,0.3)_0%,rgba(253,249,243,0)_70%)] blur-3xl pointer-events-none opacity-80" />
+
+          {/* NEW: Subtle Decorative Motifs at the bottom gap area */}
+          <div className="absolute bottom-0 left-0 w-full h-[45%] z-[7] pointer-events-none overflow-hidden opacity-[0.08]">
+            <div className="absolute bottom-10 left-[15%] rotate-[-15deg]">
+              <Flower size={150} className="text-white" strokeWidth={0.3} />
+            </div>
+            <div className="absolute bottom-32 right-[10%] rotate-[25deg]">
+              <Flower size={120} className="text-white" strokeWidth={0.3} />
+            </div>
+            {/* Traditional Geometric Circles Pattern */}
+            <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full border border-white/20" />
+            <div className="absolute bottom-[-80px] left-1/2 -translate-x-1/2 w-[320px] h-[320px] rounded-full border border-white/10" />
+            <div className="absolute bottom-[-60px] left-1/2 -translate-x-1/2 w-[240px] h-[240px] rounded-full border border-white/5" />
+          </div>
+          
+          {/* Seamless bridge to the body background - eliminats any abrupt color changes */}
+          <div className="absolute inset-x-0 bottom-0 h-48 z-[8] bg-gradient-to-t from-[#FDF9F3] via-[#FDF9F3]/80 to-transparent pointer-events-none" />
         </div>
         
         {/* Janggu (Ancient Instrument) Silhouette - Refined placement */}
@@ -365,9 +390,14 @@ export default function App() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            className="mb-3 md:mb-8"
+            className="mb-4 md:mb-8 flex flex-col items-center"
           >
-            <p className="text-[11px] md:text-[14px] font-bold text-white tracking-[0.3em] md:tracking-[0.4em] uppercase drop-shadow-lg">제2회 정기연주회</p>
+            <p className="text-[11px] md:text-[13px] font-bold tracking-[0.25em] text-[#FFF8EF] drop-shadow-md mb-2">
+              천안청소년국악관현악단
+            </p>
+            <p className="text-[11px] md:text-[14px] font-bold tracking-[0.3em] text-white drop-shadow-lg opacity-90">
+              제2회 정기연주회
+            </p>
           </motion.div>
  
           <motion.div
@@ -402,12 +432,16 @@ export default function App() {
           </motion.div>
  
           {/* Unified Info Card (Date, Location, Logo) */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.2, duration: 1 }}
-            className="w-[82%] max-w-[330px] mx-auto rounded-[28px] bg-[#FFF9F0]/95 border border-[#E8A46B]/20 shadow-[0_12px_32px_rgba(70,45,20,0.12)] px-6 py-7 flex flex-col items-center text-center mt-8 md:mt-12 group"
-          >
+          <div className="relative w-full flex justify-center mt-8 md:mt-12 group">
+            {/* Ambient Radial Glow centered behind the card info area */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[150%] bg-[radial-gradient(circle_at_center,rgba(253,249,243,0.95)_0%,rgba(250,154,84,0.15)_60%,transparent_100%)] blur-2xl opacity-60 pointer-events-none z-0" />
+            
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2, duration: 1 }}
+              className="relative z-10 w-[82%] max-w-[330px] rounded-[28px] bg-[#FFF9F0]/95 border border-[#E8A46B]/20 shadow-[0_12px_32px_rgba(70,45,20,0.12)] px-6 py-7 flex flex-col items-center text-center"
+            >
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 md:gap-3 text-navy font-black text-[15px] md:text-[17px]">
                 <Calendar size={16} className="text-[#C58A52]" />
@@ -435,7 +469,8 @@ export default function App() {
             </div>
           </motion.div>
         </div>
-      </header>
+      </div>
+    </header>
 
       {/* 3. Invitation Body Section */}
       <main className="relative z-10 w-full px-8 pb-40">
