@@ -39,8 +39,14 @@ const STAFF = [
   { role: "피리", name: "송송이" },
   { role: "타악", name: "정예빈" },
   { role: "사물놀이", name: "김서진" },
-  { role: "협연", name: "야금야금" },
+  { role: "작곡가", name: "김동완" },
+  { role: "국악 병창", name: "박문정" },
 ];
+
+const COLLABORATOR = {
+  role: "협연",
+  name: "야금야금"
+};
 
 const MEMBERS = [
   {
@@ -471,7 +477,7 @@ export default function App() {
                 <span className="w-6 h-[0.5px] bg-gold-antique/30" />
               </h2>
               <p className="text-2xl font-serif text-navy leading-snug font-black break-keep">
-                전통의 선율 위에<br />청춘의 꿈을 수놓습니다
+                전통의 선율 위에<br />청소년의 꿈을 수놓습니다
               </p>
             </div>
             
@@ -527,6 +533,20 @@ export default function App() {
 
         <div className="section-divider" />
 
+        {/* 4.5 Collaboration Section */}
+        <motion.section {...fadeInUp} className="py-8 space-y-6">
+          <div className="text-center space-y-2">
+            <h2 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.4em]">Collaboration</h2>
+            <h3 className="text-2xl font-serif font-black text-navy">협연</h3>
+          </div>
+
+          <div className="rounded-[28px] bg-[#FFF9F0]/85 border border-[#E8A46B]/20 shadow-sm p-7 text-center">
+            <p className="text-2xl font-serif font-black text-[#14265A] mb-1">{COLLABORATOR.name}</p>
+          </div>
+        </motion.section>
+
+        <div className="section-divider" />
+
         {/* 5. Members Introduction */}
         <motion.section {...fadeInUp} className="py-8 space-y-10">
           <div className="text-center space-y-2">
@@ -536,8 +556,8 @@ export default function App() {
 
           <div className="grid gap-6">
             {MEMBERS.map((group, idx) => {
-              const memberCount = group.names.trim().split(/\s+/).length;
-              const formattedNames = group.names.trim().split(/\s+/).join(' · ');
+              const names = group.names.trim().split(/\s+/);
+              const memberCount = names.length;
               
               return (
                 <div key={idx} className="rounded-[28px] bg-[#FFF9F0]/85 border border-[#E8A46B]/20 shadow-[0_8px_24px_rgba(70,45,20,0.06)] p-7 group hover:bg-[#FFF9F0] transition-all">
@@ -562,10 +582,15 @@ export default function App() {
                   
                   <div className="my-5 h-px bg-[#E8A46B]/20 w-full" />
                   
-                  <div className="space-y-1">
-                    <p className="text-[14.5px] leading-[2.1] text-[#4A3A30] font-medium break-keep text-justify">
-                      {formattedNames}
-                    </p>
+                  <div className="flex flex-wrap gap-2 gap-y-2">
+                    {names.map((name) => (
+                      <span
+                        key={name}
+                        className="px-3 py-1 rounded-full bg-[#FFF6EC] border border-[#E8A46B]/20 text-sm text-[#4A4038] font-medium transition-all hover:bg-[#FFF1DF]"
+                      >
+                        {name}
+                      </span>
+                    ))}
                   </div>
                 </div>
               );
