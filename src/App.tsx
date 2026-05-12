@@ -19,19 +19,15 @@ const HERO_BACKGROUND_URL = '/img/background.png';
 const BGM_ICON_URL = '/img/bgmicon.png';
 const MAIN_LOGO_URL = '/img/logo.png';
 
-const PROGRAM = {
-  part1: [
-    { title: '거문고', songs: '홀로아리랑, 출강' },
-    { title: '해금', songs: '에델바이스, 학교 가는 길' },
-    { title: '가야금', songs: '언제나 몇 번이라도, Summer' },
-    { title: '타악', songs: '웃다리 사물놀이' },
-  ],
-  part2: [
-    { title: 'Fly to the Sky', info: '작곡 한태수' },
-    { title: '민요의 향연', info: '작곡 임교민' },
-    { title: 'Carol Medley', info: '편곡 강동완' },
-  ]
-};
+const PROGRAM = [
+  "Prince of Jeju",
+  "민요의 향연",
+  "시르렁실근",
+  "문어의 꿈",
+  "웃다리 사물놀이",
+  "K-POP Medley",
+  "축제"
+];
 
 const STAFF = [
   { role: "예술감독 겸 지휘자", name: "박상진", highlight: true },
@@ -53,11 +49,11 @@ const MEMBERS = [
   },
   {
     instrument: "해금",
-    names: "김무찬 김예준 김하율 문서연 윤채린 이경하 이유신 이채윤 장재이 정유안 진나연 최하은 한가은 현채이 김하은"
+    names: "김무찬 김예준 김하율 문서연 윤채린 이경하 이유신 이채윤 장재이 장재영 정유안 진나연 최하은 한가은 현채이 김하은"
   },
   {
     instrument: "거문고",
-    names: "곽서율 고현 김다솜 김은서 박서윤 윤이나 이인준 이지원"
+    names: "곽서율 고현 김다솜 김은서 박서윤 윤이나 이인준 이지원 정승안 정은아"
   },
   {
     instrument: "타악",
@@ -77,7 +73,7 @@ const MEMBERS = [
   },
   {
     instrument: "특별단원",
-    names: "정승안 정은아 김지율"
+    names: "김지율"
   }
 ];
 
@@ -92,6 +88,14 @@ const MEMBER_ICON_MAP: Record<string, string> = {
   특별단원: "/img/특별.png",
 };
 
+const GALLERY_IMAGES = Array.from(
+  { length: 14 },
+  (_, i) => `/img/gallery/photo${i + 1}.jpg`
+);
+
+const IMAGES_INIT = GALLERY_IMAGES.slice(0, 4);
+const IMAGES_POOL_INIT = GALLERY_IMAGES.slice(4);
+
 const RSVP_LINK = "https://naver.me/58q3vwX1";
 
 const fadeInUp = {
@@ -105,8 +109,66 @@ export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [displayImages, setDisplayImages] = useState<string[]>(IMAGES_INIT);
+  const poolRef = useRef<string[]>(IMAGES_POOL_INIT);
+  const [fadingIndex, setFadingIndex] = useState<number | null>(null);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
   const [showShareToast, setShowShareToast] = useState(false);
+
+  // Preload images
+  useEffect(() => {
+    GALLERY_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
+  // Gallery Rotation Logic: Swap one slot every 5.5s
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      // Pick a random slot (0-3)
+      const slotIndex = Math.floor(Math.random() * 4);
+      setFadingIndex(slotIndex);
+
+      const swapTimer = window.setTimeout(() => {
+        setDisplayImages((prev) => {
+          const newImages = [...prev];
+          const oldImage = newImages[slotIndex];
+
+          // Duplication Check: Filter candidates that are not currently visible in other slots
+          const visibleExceptCurrent = newImages.filter((_, idx) => idx !== slotIndex);
+          const availablePool = poolRef.current.filter(
+            (candidate) => !visibleExceptCurrent.includes(candidate)
+          );
+
+          if (availablePool.length === 0) return newImages;
+
+          // Pick a random image from the filtered pool
+          const selectedPoolIndex = Math.floor(Math.random() * availablePool.length);
+          const newImage = availablePool[selectedPoolIndex];
+          
+          // Find the actual index in the real poolRef to perform the swap
+          const realPoolIndex = poolRef.current.indexOf(newImage);
+
+          newImages[slotIndex] = newImage;
+          poolRef.current[realPoolIndex] = oldImage;
+
+          return newImages;
+        });
+      }, 800);
+
+      const fadeTimer = window.setTimeout(() => {
+        setFadingIndex(null);
+      }, 950);
+
+      return () => {
+        window.clearTimeout(swapTimer);
+        window.clearTimeout(fadeTimer);
+      };
+    }, 5500);
+
+    return () => window.clearInterval(interval);
+  }, []);
 
   // Scroll handler for sticky CTA
   useEffect(() => {
@@ -252,10 +314,11 @@ export default function App() {
             transition={{ duration: 1.8, ease: "easeOut" }}
             className="absolute inset-0 z-[1] flex items-center justify-center pt-[5%]"
           >
+            <div className="absolute inset-0 bg-black/5 z-[2] pointer-events-none" />
             <img 
               src={HERO_BACKGROUND_URL} 
               alt="" 
-              className="w-full h-full object-contain sm:object-cover scale-[1.05] sm:scale-100 object-[center_18%] md:object-top"
+              className="w-full h-full object-contain sm:object-cover scale-[1.05] sm:scale-100 object-[center_18%] md:object-top opacity-85"
             />
           </motion.div>
 
@@ -331,43 +394,38 @@ export default function App() {
             </div>
           </motion.div>
  
-          {/* Info Card in Hero - Better spacing and color harmony */}
+          {/* Unified Info Card (Date, Location, Logo) */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2, duration: 1 }}
-            className="w-full max-w-[320px] md:max-w-[340px] bg-[#FDF9F3]/95 backdrop-blur-sm border border-navy/10 rounded-[32px] p-6 md:p-8 space-y-6 shadow-[0_20px_50px_rgba(0,0,0,0.15)]"
+            className="w-[82%] max-w-[330px] mx-auto rounded-[28px] bg-[#FFF9F0]/95 border border-[#E8A46B]/20 shadow-[0_12px_32px_rgba(70,45,20,0.12)] px-6 py-7 flex flex-col items-center text-center mt-8 md:mt-12 group"
           >
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 md:gap-3 text-navy font-black text-[15px] md:text-[17px]">
-                <Calendar size={16} className="text-navy/60" />
+                <Calendar size={16} className="text-[#C58A52]" />
                 <span>2026. 6. 5.(금) 오후 7:00</span>
               </div>
             </div>
             
-            <div className="h-[1px] bg-navy/10 w-10 md:w-12 mx-auto" />
+            <div className="w-10 h-px bg-[#D8C7B5] my-4" />
  
-            <div className="flex flex-col items-center gap-3 text-navy font-bold leading-relaxed">
+            <div className="flex flex-col items-center gap-3 text-navy font-bold leading-relaxed mb-6">
               <div className="flex items-start justify-center gap-2 text-[14px] md:text-[15px] px-2 text-center">
-                <MapPin size={14} className="text-navy/60 mt-0.5 shrink-0" />
+                <MapPin size={14} className="text-[#C58A52] mt-0.5 shrink-0" />
                 <span className="break-keep leading-tight">천안시청소년복합커뮤니티센터</span>
               </div>
               <span className="text-base md:text-lg font-black text-apricot tracking-tight">대공연장</span>
             </div>
-          </motion.div>
- 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 1 }}
-            className="mt-8 md:mt-12 flex justify-center w-full"
-          >
-            <img 
-              src={MAIN_LOGO_URL} 
-              alt="천안시청소년복합커뮤니티센터 로고" 
-              className="w-60 md:w-80 h-auto object-contain px-4"
-              onError={(e) => (e.currentTarget.style.display = 'none')}
-            />
+
+            <div className="w-full pt-6 border-t border-[#E8A46B]/15">
+              <img 
+                src={MAIN_LOGO_URL} 
+                alt="천안시청소년복합커뮤니티센터" 
+                className="w-[210px] max-w-[85%] mx-auto h-auto object-contain brightness-100 contrast-100"
+                onError={(e) => (e.currentTarget.style.display = 'none')}
+              />
+            </div>
           </motion.div>
         </div>
       </header>
@@ -458,7 +516,7 @@ export default function App() {
                     <div className="space-y-1">
                       <h4 className="text-xl font-extrabold text-[#14265A] font-serif">{group.instrument}</h4>
                       <p className="text-[11px] font-bold text-[#C58A52] tracking-wider">
-                        {group.instrument === "특별단원" ? `특별단원 ${memberCount}명` : `단원 ${memberCount}명`}
+                        {`단원 ${memberCount}명`}
                       </p>
                     </div>
                     <div className="w-16 h-16 rounded-full bg-[#FFF1DF] border border-[#E8A46B]/30 flex items-center justify-center shrink-0 shadow-inner">
@@ -488,48 +546,44 @@ export default function App() {
 
         <div className="section-divider" />
 
-        {/* 6. Program Section */}
-        <motion.section {...fadeInUp} className="py-8 space-y-16">
-          <div className="text-center space-y-2">
-            <h2 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.4em]">Program</h2>
-            <h3 className="text-2xl font-serif font-black text-navy">프로그램</h3>
-          </div>
+        {/* 6. Gallery Section */}
+        <motion.section 
+          {...fadeInUp} 
+          id="gallery" 
+          className="relative py-16 px-6"
+        >
+          <div className="max-w-md mx-auto">
+            <div className="text-center mb-8">
+              <p className="text-[10px] tracking-[0.35em] uppercase text-[#C58A52] font-bold">
+                Gallery
+              </p>
+              <h2 className="mt-3 text-2xl font-bold text-[#14265A] font-serif">
+                갤러리
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-[#5A4638] break-keep font-medium">
+                연주회를 위해 흘린 땀방울, 그 빛나는 순간들
+              </p>
+            </div>
 
-          <div className="space-y-8">
-            <div className="flex items-center justify-between border-b border-gold-antique/10 pb-4">
-              <h3 className="text-[11px] font-bold text-gold-antique uppercase tracking-widest flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-gold-antique" /> 1부
-              </h3>
-            </div>
-            
-            <div className="grid gap-3">
-              {PROGRAM.part1.map((item, idx) => (
-                <div key={idx} className="program-card p-6 flex flex-col gap-2 group transition-colors hover:bg-white/60">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-[17px] font-serif font-black text-navy">{item.title}</h4>
-                  </div>
-                  <div className="h-[1px] bg-gold-antique/5 w-full" />
-                  <p className="text-[14px] text-navy/70 font-medium break-keep leading-relaxed italic">{item.songs}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-8">
-            <div className="flex items-center justify-between border-b border-gold-antique/10 pb-4">
-              <h3 className="text-[11px] font-bold text-navy/40 uppercase tracking-widest flex items-center gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-navy/20" /> 2부
-              </h3>
-            </div>
-            
-            <div className="grid gap-3">
-              {PROGRAM.part2.map((item, idx) => (
-                <div key={idx} className="program-card p-6 flex flex-col gap-2 group hover:bg-white/60 transition-all">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-[17px] font-serif font-black text-navy">{item.title}</h4>
-                  </div>
-                  <div className="h-[1px] bg-gold-antique/5 w-full" />
-                  <p className="text-[14px] text-navy/60 font-medium">{item.info}</p>
+            <div className="grid grid-cols-2 gap-3">
+              {displayImages.map((src, index) => (
+                <div 
+                  key={`${src}-${index}`} 
+                  className="aspect-[4/3] overflow-hidden rounded-2xl bg-[#FFF7EA] border border-[#E8A46B]/15 shadow-[0_6px_18px_rgba(70,45,20,0.08)]"
+                >
+                  <img 
+                    src={src} 
+                    alt={`갤러리 이미지 ${index + 1}`}
+                    loading="eager"
+                    className={`
+                      w-full h-full object-cover
+                      transition-opacity duration-700 ease-in-out
+                      ${fadingIndex === index ? "opacity-0" : "opacity-100"}
+                    `}
+                    onError={() => {
+                      console.warn("Gallery image failed to load:", src);
+                    }}
+                  />
                 </div>
               ))}
             </div>
@@ -538,7 +592,28 @@ export default function App() {
 
         <div className="section-divider" />
 
-        {/* 7. Venue Section */}
+        {/* 7. Program Section */}
+        <motion.section {...fadeInUp} className="py-8 space-y-16">
+          <div className="text-center space-y-2">
+            <h2 className="text-[10px] font-bold text-gold-antique uppercase tracking-[0.4em]">Program</h2>
+            <h3 className="text-2xl font-serif font-black text-navy">프로그램</h3>
+          </div>
+
+          <div className="grid gap-4">
+            {PROGRAM.map((song, idx) => (
+              <div key={idx} className="program-card p-6 flex items-center justify-between group transition-colors hover:bg-white/60">
+                <div className="flex items-center gap-4">
+                  <span className="text-[15px] font-serif font-black text-gold-antique/60">{idx + 1}.</span>
+                  <h4 className="text-[17px] font-serif font-black text-navy">{song}</h4>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.section>
+
+        <div className="section-divider" />
+
+        {/* 8. Venue Section */}
         <motion.section {...fadeInUp} className="py-12 space-y-12">
           <div className="space-y-8 text-center flex flex-col items-center">
             <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-sm border border-gold-antique/10 mb-2">
